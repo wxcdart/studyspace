@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Wrangler
+.wrangler/
+.dev.vars
+
+# Clasp / Google Apps Script
+.clasprc.json
+gas/.clasp.json
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+node_modules

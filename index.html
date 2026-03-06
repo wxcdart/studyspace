@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudySpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Background layer ─────────────────────────────────────────────────── -->
+  <div id="bg-layer">
+    <div id="yt-player" tabindex="-1"></div>
+  </div>
+
+  <!-- ── Overlay ──────────────────────────────────────────────────────────── -->
+  <div id="overlay" aria-hidden="true"></div>
+
+  <!-- ── App shell ────────────────────────────────────────────────────────── -->
+  <div id="app">
+
+    <header id="topbar">
+      <span class="logo">StudySpace</span>
+      <nav class="topbar-actions">
+        <button id="btn-spaces" class="btn-ghost">
+          <span id="current-space-name">Choose a Space</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+            <path d="M0 0l5 6 5-6z"/>
+          </svg>
+        </button>
+        <button id="btn-sounds" class="btn-ghost btn-icon" title="Ambient Sounds" aria-label="Ambient Sounds">
+          🎵
+        </button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <div id="clock" aria-live="off"></div>
+
+      <div id="timer-widget" class="glass-card">
+        <div id="timer-modes" role="group" aria-label="Timer mode">
+          <button class="mode-btn active" data-mode="focus">Focus</button>
+          <button class="mode-btn" data-mode="shortBreak">Short Break</button>
+          <button class="mode-btn" data-mode="longBreak">Long Break</button>
+        </div>
+
+        <div id="timer-display" role="timer" aria-live="off">25:00</div>
+
+        <div id="timer-controls">
+          <button id="btn-start" class="btn-primary">Start</button>
+          <button id="btn-reset" class="btn-ghost-sm">Reset</button>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ── Spaces panel ──────────────────────────────────────────────────────── -->
+  <aside id="spaces-panel" class="slide-panel hidden" role="dialog" aria-label="Select a space" aria-modal="true">
+    <div class="panel-header">
+      <h2>Spaces</h2>
+      <button class="btn-close" id="btn-close-spaces" aria-label="Close">✕</button>
+    </div>
+    <div id="spaces-grid"></div>
+  </aside>
+
+  <!-- ── Sounds panel ──────────────────────────────────────────────────────── -->
+  <aside id="sounds-panel" class="slide-panel hidden" role="dialog" aria-label="Ambient sounds" aria-modal="true">
+    <div class="panel-header">
+      <h2>Ambient Sounds</h2>
+      <button class="btn-close" id="btn-close-sounds" aria-label="Close">✕</button>
+    </div>
+    <div id="sounds-list"></div>
+  </aside>
+
+  <!-- ── Panel backdrop ───────────────────────────────────────────────────── -->
+  <div id="panel-backdrop" class="hidden" aria-hidden="true"></div>
+
+  <!-- Howler.js (ambient audio) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <!-- YouTube IFrame API is loaded dynamically by main.js -->
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

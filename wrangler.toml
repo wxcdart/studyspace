@@ -1,0 +1,11 @@
+name = "studyspace-worker"
+main = "worker/index.js"
+compatibility_date = "2025-01-01"
+
+[[kv_namespaces]]
+binding = "SPACES_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_YOUR_PREVIEW_KV_NAMESPACE_ID"
+
+[vars]
+GAS_URL = "REPLACE_WITH_YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL"
