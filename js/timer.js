@@ -2,13 +2,11 @@ import { TIMER_DURATIONS } from './config.js';
 
 let mode            = 'focus';
 let running         = false;
-let endTime         = null;                        // absolute ms timestamp
-let pausedRemaining = TIMER_DURATIONS.focus;       // ms remaining when paused / reset
+let endTime         = null;
+let pausedRemaining = TIMER_DURATIONS.focus;
 
 let onTickCb     = null;
 let onCompleteCb = null;
-
-// ── Public API ────────────────────────────────────────────────────────────────
 
 export function initTimer({ onTick, onComplete }) {
   onTickCb     = onTick;
@@ -40,10 +38,16 @@ export function setTimerMode(newMode) {
   resetTimer();
 }
 
+/** Update durations (from settings) and reset the current mode. */
+export function setDurations({ focus, shortBreak, longBreak }) {
+  TIMER_DURATIONS.focus      = focus;
+  TIMER_DURATIONS.shortBreak = shortBreak;
+  TIMER_DURATIONS.longBreak  = longBreak;
+  resetTimer();
+}
+
 export function isRunning() { return running; }
 export function getMode()   { return mode; }
-
-// ── Internal loop (rAF-based, always running) ─────────────────────────────────
 
 function getRemainingMs() {
   if (running && endTime !== null) return Math.max(0, endTime - Date.now());
@@ -52,7 +56,6 @@ function getRemainingMs() {
 
 function loop() {
   const remaining = getRemainingMs();
-
   if (onTickCb) onTickCb(remaining);
 
   if (running && remaining <= 0) {

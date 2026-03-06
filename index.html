@@ -29,16 +29,13 @@
       <nav class="topbar-actions">
         <button id="btn-spaces" class="btn-ghost">
           <span id="current-space-name">Choose a Space</span>
-          <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
-            <path d="M0 0l5 6 5-6z"/>
-          </svg>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
         </button>
-        <button id="btn-sounds" class="btn-ghost btn-icon" title="Ambient Sounds" aria-label="Ambient Sounds">
-          🎵
-        </button>
-        <button id="btn-mute" class="btn-ghost btn-icon" title="Mute video" aria-label="Mute video">
-          🔇
-        </button>
+        <button id="btn-sounds"   class="btn-ghost btn-icon" title="Ambient Sounds (S)" aria-label="Ambient Sounds">🎵</button>
+        <button id="btn-todos"    class="btn-ghost btn-icon" title="To-do List (T)"     aria-label="To-do list">📝</button>
+        <button id="btn-mute"     class="btn-ghost btn-icon" title="Mute video"         aria-label="Mute video">🔇</button>
+        <button id="btn-fullscreen" class="btn-ghost btn-icon" title="Fullscreen"       aria-label="Fullscreen">⛶</button>
+        <button id="btn-settings" class="btn-ghost btn-icon" title="Settings"           aria-label="Settings">⚙️</button>
       </nav>
     </header>
 
@@ -58,10 +55,88 @@
           <button id="btn-start" class="btn-primary">Start</button>
           <button id="btn-reset" class="btn-ghost-sm">Reset</button>
         </div>
+
+        <div id="session-counter">🍅 <span id="session-count">0</span> today</div>
       </div>
     </main>
 
   </div>
+
+  <!-- ── Todos panel (left) ────────────────────────────────────────────────── -->
+  <aside id="todos-panel" class="slide-panel panel-left hidden" role="dialog" aria-label="To-do list" aria-modal="true">
+    <div class="panel-header">
+      <h2>To-do</h2>
+      <button class="btn-close" id="btn-close-todos" aria-label="Close">✕</button>
+    </div>
+    <div class="todos-body">
+      <form id="todo-form" class="todo-add-form">
+        <input type="text" id="todo-input" placeholder="Add a task…" autocomplete="off" maxlength="200" />
+        <button type="submit" class="btn-add-todo" aria-label="Add">+</button>
+      </form>
+      <ul id="todos-list" class="todos-list"></ul>
+    </div>
+  </aside>
+
+  <!-- ── Settings panel ───────────────────────────────────────────────────── -->
+  <aside id="settings-panel" class="slide-panel hidden" role="dialog" aria-label="Settings" aria-modal="true">
+    <div class="panel-header">
+      <h2>Settings</h2>
+      <button class="btn-close" id="btn-close-settings" aria-label="Close">✕</button>
+    </div>
+    <div class="settings-body">
+
+      <section class="settings-section">
+        <h3>Display</h3>
+        <div class="setting-row">
+          <label for="dim-slider">Background Dim</label>
+          <input type="range" id="dim-slider" class="volume-slider" min="0" max="85" value="45" />
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Timer</h3>
+        <div class="setting-row">
+          <label for="auto-transition-toggle">Auto-transition</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="auto-transition-toggle" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <label for="dur-focus">Pomodoro</label>
+          <div class="dur-wrap"><input type="number" id="dur-focus" min="1" max="90"  value="25" /><span>min</span></div>
+        </div>
+        <div class="setting-row">
+          <label for="dur-short">Short Break</label>
+          <div class="dur-wrap"><input type="number" id="dur-short" min="1" max="30" value="5"  /><span>min</span></div>
+        </div>
+        <div class="setting-row">
+          <label for="dur-long">Long Break</label>
+          <div class="dur-wrap"><input type="number" id="dur-long"  min="1" max="60" value="15" /><span>min</span></div>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Alarm</h3>
+        <div class="setting-row">
+          <label for="alarm-volume">Timer Volume</label>
+          <input type="range" id="alarm-volume" class="volume-slider" min="0" max="1" step="0.05" value="0.7" style="width:120px" />
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <ul class="shortcut-list">
+          <li><kbd>Space</kbd> Start / Pause timer</li>
+          <li><kbd>R</kbd> Reset timer</li>
+          <li><kbd>F</kbd> Focus mode (hide UI)</li>
+          <li><kbd>T</kbd> To-do list</li>
+          <li><kbd>S</kbd> Ambient sounds</li>
+          <li><kbd>Esc</kbd> Close panels / exit focus mode</li>
+        </ul>
+      </section>
+
+    </div>
+  </aside>
 
   <!-- ── Spaces panel ──────────────────────────────────────────────────────── -->
   <aside id="spaces-panel" class="slide-panel hidden" role="dialog" aria-label="Select a space" aria-modal="true">
