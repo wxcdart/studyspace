@@ -1,13 +1,15 @@
 const KEY_PREFIX = 'ss:';
 
 export const KEYS = {
-  lastSpaceId:    'lastSpaceId',
-  dim:            'dim',
-  timerDurations: 'timerDurations',
-  todos:          'todos',
-  sessions:       'sessions',
-  autoTransition: 'autoTransition',
-  alarmVolume:    'alarmVolume',
+  lastSpaceId:      'lastSpaceId',
+  dim:              'dim',
+  timerDurations:   'timerDurations',
+  todos:            'todos',
+  sessions:         'sessions',
+  autoTransition:   'autoTransition',
+  alarmVolume:      'alarmVolume',
+  playlists:        'playlists',
+  activePlaylistId: 'activePlaylistId',
 };
 
 export function get(key, defaultValue = null) {

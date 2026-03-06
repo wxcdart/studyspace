@@ -250,7 +250,7 @@ function closeAllPanels() {
 
 document.getElementById('btn-spaces').addEventListener('click',   () => openPanel(spacesPanel));
 document.getElementById('btn-sounds').addEventListener('click',   () => { renderSoundsPanel(); openPanel(soundsPanel); });
-document.getElementById('btn-music').addEventListener('click',    () => openPanel(musicPanel));
+document.getElementById('btn-music').addEventListener('click',    () => { renderMusicPanel(); openPanel(musicPanel); });
 document.getElementById('btn-todos').addEventListener('click',    () => openPanel(todosPanel));
 document.getElementById('btn-settings').addEventListener('click', () => openPanel(settingsPanel));
 document.getElementById('btn-close-spaces').addEventListener('click',   closeAllPanels);
@@ -435,6 +435,94 @@ dimSlider.addEventListener('input', () => {
 
 [durFocus, durShort, durLong].forEach(input => {
   input.addEventListener('change', applyDurations);
+});
+
+// ── Music panel ───────────────────────────────────────────────────────────────
+
+const DEFAULT_PLAYLISTS = [
+  { id: 'default', name: 'StudySpace', spotifyId: '4aFB9we2DxFCIfJN4aClnE' },
+];
+
+const spotifyEmbed      = document.getElementById('spotify-embed');
+const playlistTabsEl    = document.getElementById('playlist-tabs');
+const playlistForm      = document.getElementById('playlist-form');
+const playlistUrlInput  = document.getElementById('playlist-url-input');
+const playlistNameInput = document.getElementById('playlist-name-input');
+
+function getPlaylists()       { return get(KEYS.playlists, DEFAULT_PLAYLISTS); }
+function savePlaylistList(pl) { set(KEYS.playlists, pl); }
+function getActiveId()        { return get(KEYS.activePlaylistId, 'default'); }
+function saveActiveId(id)     { set(KEYS.activePlaylistId, id); }
+
+function extractSpotifyId(input) {
+  const m = input.match(/spotify\.com\/(?:embed\/)?playlist\/([A-Za-z0-9]+)/);
+  return m ? m[1] : null;
+}
+
+function renderMusicPanel() {
+  const playlists = getPlaylists();
+  const activeId  = getActiveId();
+  const active    = playlists.find(p => p.id === activeId) || playlists[0];
+
+  // Update iframe only when src changes (avoids reload flicker)
+  const newSrc = `https://open.spotify.com/embed/playlist/${active.spotifyId}?utm_source=generator&theme=0`;
+  if (spotifyEmbed.src !== newSrc) spotifyEmbed.src = newSrc;
+
+  playlistTabsEl.innerHTML = playlists.map(p => `
+    <div class="playlist-tab${p.id === active.id ? ' active' : ''}" data-id="${p.id}">
+      <span class="tab-name">${escapeHtml(p.name)}</span>
+      ${playlists.length > 1
+        ? `<button class="tab-delete" data-id="${p.id}" aria-label="Remove ${escapeHtml(p.name)}">×</button>`
+        : ''}
+    </div>
+  `).join('');
+}
+
+// Tab clicks + delete
+playlistTabsEl.addEventListener('click', e => {
+  const del = e.target.closest('.tab-delete');
+  if (del) {
+    e.stopPropagation();
+    const filtered = getPlaylists().filter(p => p.id !== del.dataset.id);
+    savePlaylistList(filtered);
+    if (getActiveId() === del.dataset.id) saveActiveId(filtered[0]?.id ?? 'default');
+    renderMusicPanel();
+    return;
+  }
+  const tab = e.target.closest('.playlist-tab');
+  if (tab) { saveActiveId(tab.dataset.id); renderMusicPanel(); }
+});
+
+// Add playlist form
+document.getElementById('btn-add-playlist').addEventListener('click', () => {
+  playlistForm.classList.toggle('hidden');
+  if (!playlistForm.classList.contains('hidden')) playlistUrlInput.focus();
+});
+
+document.getElementById('btn-cancel-playlist').addEventListener('click', () => {
+  playlistForm.classList.add('hidden');
+  playlistUrlInput.value = '';
+  playlistNameInput.value = '';
+});
+
+playlistForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const spotifyId = extractSpotifyId(playlistUrlInput.value.trim());
+  if (!spotifyId) {
+    playlistUrlInput.classList.add('input-error');
+    setTimeout(() => playlistUrlInput.classList.remove('input-error'), 1000);
+    return;
+  }
+  const playlists = getPlaylists();
+  const name = playlistNameInput.value.trim() || `Playlist ${playlists.length + 1}`;
+  const entry = { id: String(Date.now()), name, spotifyId };
+  playlists.push(entry);
+  savePlaylistList(playlists);
+  saveActiveId(entry.id);
+  playlistForm.classList.add('hidden');
+  playlistUrlInput.value = '';
+  playlistNameInput.value = '';
+  renderMusicPanel();
 });
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
