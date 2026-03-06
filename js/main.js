@@ -230,11 +230,12 @@ function tickClock() {
 
 const spacesPanel   = document.getElementById('spaces-panel');
 const soundsPanel   = document.getElementById('sounds-panel');
+const musicPanel    = document.getElementById('music-panel');
 const todosPanel    = document.getElementById('todos-panel');
 const settingsPanel = document.getElementById('settings-panel');
 const panelBackdrop = document.getElementById('panel-backdrop');
 
-const allPanels = [spacesPanel, soundsPanel, todosPanel, settingsPanel];
+const allPanels = [spacesPanel, soundsPanel, musicPanel, todosPanel, settingsPanel];
 
 function openPanel(panel) {
   allPanels.forEach(p => p !== panel && p.classList.add('hidden'));
@@ -249,10 +250,12 @@ function closeAllPanels() {
 
 document.getElementById('btn-spaces').addEventListener('click',   () => openPanel(spacesPanel));
 document.getElementById('btn-sounds').addEventListener('click',   () => { renderSoundsPanel(); openPanel(soundsPanel); });
+document.getElementById('btn-music').addEventListener('click',    () => openPanel(musicPanel));
 document.getElementById('btn-todos').addEventListener('click',    () => openPanel(todosPanel));
 document.getElementById('btn-settings').addEventListener('click', () => openPanel(settingsPanel));
 document.getElementById('btn-close-spaces').addEventListener('click',   closeAllPanels);
 document.getElementById('btn-close-sounds').addEventListener('click',   closeAllPanels);
+document.getElementById('btn-close-music').addEventListener('click',    closeAllPanels);
 document.getElementById('btn-close-todos').addEventListener('click',    closeAllPanels);
 document.getElementById('btn-close-settings').addEventListener('click', closeAllPanels);
 panelBackdrop.addEventListener('click', closeAllPanels);

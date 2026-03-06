@@ -304,6 +304,11 @@ input[type="range"].volume-slider::-moz-range-thumb {
   border: none; cursor: pointer;
 }
 
+/* ── Music panel ────────────────────────────────────────────────────────────── */
+.music-panel { width: min(340px, 100vw); }
+.music-body  { padding: 1rem; }
+.music-body iframe { border-radius: 0.75rem; display: block; }
+
 /* ── Toggle switch (settings) ───────────────────────────────────────────────── */
 .toggle-switch { position: relative; display: inline-block; cursor: pointer; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
