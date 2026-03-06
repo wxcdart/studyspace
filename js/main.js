@@ -1,6 +1,6 @@
 import { initTimer, startTimer, pauseTimer, resetTimer, setTimerMode, isRunning } from './timer.js';
-import { loadSounds, getTracks, toggleTrack, setTrackVolume } from './audio.js';
-import { fetchSpaces, setActiveSpace, getActiveSpaceId } from './spaces.js';
+import { loadSounds, getAllTracks, toggleTrack, setTrackVolume } from './audio.js';
+import { fetchSpaces, setActiveSpace } from './spaces.js';
 
 // ── YouTube ───────────────────────────────────────────────────────────────────
 
@@ -20,7 +20,6 @@ window.onYouTubeIframeAPIReady = () => {
     events: {
       onReady(e) { e.target.playVideo(); },
       onStateChange(e) {
-        // Keep looping — loop=1 requires the playlist param; this is more reliable
         if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
       },
     },
@@ -38,10 +37,29 @@ function loadVideo(youtubeId) {
   if (ytReady && ytPlayer) {
     ytPlayer.loadVideoById(youtubeId);
     ytPlayer.mute();
+    ytMuted = true;
+    updateMuteBtn();
   } else {
     pendingVideoId = youtubeId;
   }
 }
+
+// ── YouTube mute toggle ───────────────────────────────────────────────────────
+
+let ytMuted = true;
+const btnMute = document.getElementById('btn-mute');
+
+function updateMuteBtn() {
+  btnMute.textContent = ytMuted ? '🔇' : '🔊';
+  btnMute.title = ytMuted ? 'Unmute video' : 'Mute video';
+}
+
+btnMute.addEventListener('click', () => {
+  if (!ytPlayer) return;
+  ytMuted = !ytMuted;
+  ytMuted ? ytPlayer.mute() : ytPlayer.unMute();
+  updateMuteBtn();
+});
 
 // ── Timer UI ──────────────────────────────────────────────────────────────────
 
@@ -191,22 +209,24 @@ function selectSpace(space) {
 const soundsList = document.getElementById('sounds-list');
 
 function renderSoundsPanel() {
-  const tracks = getTracks();
+  const tracks = getAllTracks();
 
   if (!tracks.length) {
-    soundsList.innerHTML = '<p class="no-sounds-msg">No ambient sounds for this space.</p>';
+    soundsList.innerHTML = '<p class="no-sounds-msg">No sounds available.</p>';
     return;
   }
 
+  const builtInCount = 3; // White / Brown / Pink Noise
   soundsList.innerHTML = tracks.map((track, i) => `
+    ${i === builtInCount && tracks.length > builtInCount ? '<div class="sounds-divider">Space Sounds</div>' : ''}
     <div class="sound-track">
       <div class="sound-track-header">
-        <span class="sound-track-label">${track.label || `Track ${i + 1}`}</span>
+        <span class="sound-track-label">${track.label}</span>
         <button class="sound-toggle${track.playing ? ' on' : ''}" data-index="${i}" aria-label="Toggle ${track.label}"></button>
       </div>
       <input
         type="range" class="volume-slider"
-        data-index="${i}" min="0" max="1" step="0.01" value="0.5"
+        data-index="${i}" min="0" max="1" step="0.01" value="${track._vol ?? 0.5}"
         aria-label="${track.label} volume"
       />
     </div>
@@ -219,7 +239,7 @@ soundsList.addEventListener('click', e => {
   if (!btn) return;
   const index = Number(btn.dataset.index);
   toggleTrack(index);
-  btn.classList.toggle('on', getTracks()[index].playing);
+  btn.classList.toggle('on', getAllTracks()[index].playing);
 });
 
 soundsList.addEventListener('input', e => {

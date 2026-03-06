@@ -304,6 +304,17 @@ input[type="range"].volume-slider::-moz-range-thumb {
   border: none; cursor: pointer;
 }
 
+.sounds-divider {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.5rem 0 0.25rem;
+  border-top: 1px solid var(--glass-border);
+  margin-top: 0.25rem;
+}
+
 .no-sounds-msg {
   color: var(--text-muted); font-size: 0.82rem;
   text-align: center; padding: 2rem 0;
