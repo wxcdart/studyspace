@@ -235,6 +235,12 @@ function persistTimerPosition() {
   });
 }
 
+function clearTimerPositionPersistence() {
+  try {
+    localStorage.removeItem('ss:' + KEYS.timerWidgetPosition);
+  } catch {}
+}
+
 function enableFloatingTimer(anchorRect = null) {
   if (timerWidget.classList.contains('timer-draggable')) return;
   const rect = anchorRect || timerWidget.getBoundingClientRect();
@@ -248,6 +254,14 @@ function restoreTimerPosition() {
   if (!saved || typeof saved.left !== 'number' || typeof saved.top !== 'number') return;
   enableFloatingTimer();
   const clamped = clampTimerPosition(saved.left, saved.top);
+  setTimerPosition(clamped.left, clamped.top);
+}
+
+function centerTimerWidget() {
+  enableFloatingTimer();
+  const left = (window.innerWidth - timerWidget.offsetWidth) / 2;
+  const top  = (window.innerHeight - timerWidget.offsetHeight) / 2;
+  const clamped = clampTimerPosition(left, top);
   setTimerPosition(clamped.left, clamped.top);
 }
 
@@ -516,6 +530,7 @@ const overlay            = document.getElementById('overlay');
 const durFocus           = document.getElementById('dur-focus');
 const durShort           = document.getElementById('dur-short');
 const durLong            = document.getElementById('dur-long');
+const btnResetWidgetPosition = document.getElementById('btn-reset-widget-position');
 const autoTransitionToggle = document.getElementById('auto-transition-toggle');
 const alarmVolumeSlider  = document.getElementById('alarm-volume');
 
@@ -548,6 +563,11 @@ dimSlider.addEventListener('input', () => {
 
 [durFocus, durShort, durLong].forEach(input => {
   input.addEventListener('change', applyDurations);
+});
+
+btnResetWidgetPosition.addEventListener('click', () => {
+  centerTimerWidget();
+  clearTimerPositionPersistence();
 });
 
 // ── Music panel ───────────────────────────────────────────────────────────────

@@ -541,6 +541,10 @@ body.focus-mode #app:hover {
   margin-bottom: 0.75rem; gap: 1rem;
 }
 .setting-row label { font-size: 0.85rem; }
+.setting-row .btn-ghost-sm {
+  padding: 0.35rem 0.9rem;
+  min-height: 2rem;
+}
 .dur-wrap { display: flex; align-items: center; gap: 0.4rem; }
 .dur-wrap input[type="number"] {
   width: 4rem;
