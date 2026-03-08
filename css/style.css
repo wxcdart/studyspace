@@ -94,6 +94,29 @@ html, body {
   min-width: 300px;
 }
 
+#timer-widget.timer-draggable {
+  position: fixed;
+  z-index: 8;
+  margin: 0;
+  touch-action: none;
+  cursor: grab;
+}
+
+#timer-widget.timer-draggable * {
+  cursor: inherit;
+}
+
+#timer-widget.timer-draggable button,
+#timer-widget.timer-draggable input,
+#timer-widget.timer-draggable label {
+  cursor: pointer;
+}
+
+#timer-widget.timer-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
 #timer-modes {
   display: flex; gap: 0.2rem;
   background: rgba(0, 0, 0, 0.35);

@@ -4,6 +4,7 @@ export const KEYS = {
   lastSpaceId:      'lastSpaceId',
   dim:              'dim',
   timerDurations:   'timerDurations',
+  timerWidgetPosition: 'timerWidgetPosition',
   todos:            'todos',
   sessions:         'sessions',
   autoTransition:   'autoTransition',

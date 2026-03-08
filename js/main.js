@@ -119,6 +119,10 @@ const btnReset      = document.getElementById('btn-reset');
 const modeButtons   = document.querySelectorAll('.mode-btn');
 const timerWidget   = document.getElementById('timer-widget');
 const sessionCountEl = document.getElementById('session-count');
+const DRAG_MARGIN = 8;
+const DRAG_THRESHOLD = 4;
+
+let dragState = null;
 
 function formatTime(ms) {
   const totalSec = Math.ceil(ms / 1000);
@@ -199,6 +203,115 @@ modeButtons.forEach(btn => {
     btnStart.textContent = 'Start';
     btnStart.classList.remove('pausing');
   });
+});
+
+// ── Draggable timer widget ───────────────────────────────────────────────────
+
+function isInteractiveTarget(target) {
+  return !!target.closest('button, input, select, textarea, a, label');
+}
+
+function clampTimerPosition(left, top) {
+  const width  = timerWidget.offsetWidth;
+  const height = timerWidget.offsetHeight;
+  const maxLeft = Math.max(DRAG_MARGIN, window.innerWidth - width - DRAG_MARGIN);
+  const maxTop  = Math.max(DRAG_MARGIN, window.innerHeight - height - DRAG_MARGIN);
+  return {
+    left: Math.min(maxLeft, Math.max(DRAG_MARGIN, left)),
+    top: Math.min(maxTop, Math.max(DRAG_MARGIN, top)),
+  };
+}
+
+function setTimerPosition(left, top) {
+  timerWidget.style.left = `${left}px`;
+  timerWidget.style.top = `${top}px`;
+}
+
+function persistTimerPosition() {
+  if (!timerWidget.classList.contains('timer-draggable')) return;
+  set(KEYS.timerWidgetPosition, {
+    left: parseFloat(timerWidget.style.left) || DRAG_MARGIN,
+    top: parseFloat(timerWidget.style.top) || DRAG_MARGIN,
+  });
+}
+
+function enableFloatingTimer(anchorRect = null) {
+  if (timerWidget.classList.contains('timer-draggable')) return;
+  const rect = anchorRect || timerWidget.getBoundingClientRect();
+  timerWidget.classList.add('timer-draggable');
+  const clamped = clampTimerPosition(rect.left, rect.top);
+  setTimerPosition(clamped.left, clamped.top);
+}
+
+function restoreTimerPosition() {
+  const saved = get(KEYS.timerWidgetPosition, null);
+  if (!saved || typeof saved.left !== 'number' || typeof saved.top !== 'number') return;
+  enableFloatingTimer();
+  const clamped = clampTimerPosition(saved.left, saved.top);
+  setTimerPosition(clamped.left, clamped.top);
+}
+
+function onTimerPointerDown(e) {
+  if (e.button !== 0) return;
+  if (isInteractiveTarget(e.target)) return;
+
+  const rect = timerWidget.getBoundingClientRect();
+  dragState = {
+    pointerId: e.pointerId,
+    startX: e.clientX,
+    startY: e.clientY,
+    offsetX: e.clientX - rect.left,
+    offsetY: e.clientY - rect.top,
+    moved: false,
+    anchorRect: rect,
+  };
+
+  timerWidget.setPointerCapture(e.pointerId);
+}
+
+function onTimerPointerMove(e) {
+  if (!dragState || e.pointerId !== dragState.pointerId) return;
+
+  const dx = e.clientX - dragState.startX;
+  const dy = e.clientY - dragState.startY;
+  if (!dragState.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+
+  if (!dragState.moved) {
+    dragState.moved = true;
+    enableFloatingTimer(dragState.anchorRect);
+    timerWidget.classList.add('timer-dragging');
+  }
+
+  const unclampedLeft = e.clientX - dragState.offsetX;
+  const unclampedTop  = e.clientY - dragState.offsetY;
+  const clamped = clampTimerPosition(unclampedLeft, unclampedTop);
+  setTimerPosition(clamped.left, clamped.top);
+}
+
+function clearDragState(pointerId) {
+  if (!dragState || pointerId !== dragState.pointerId) return;
+  const moved = dragState.moved;
+  dragState = null;
+  timerWidget.classList.remove('timer-dragging');
+  if (moved) persistTimerPosition();
+}
+
+timerWidget.addEventListener('pointerdown', onTimerPointerDown);
+timerWidget.addEventListener('pointermove', onTimerPointerMove);
+timerWidget.addEventListener('pointerup', e => {
+  clearDragState(e.pointerId);
+  if (timerWidget.hasPointerCapture(e.pointerId)) timerWidget.releasePointerCapture(e.pointerId);
+});
+timerWidget.addEventListener('pointercancel', e => clearDragState(e.pointerId));
+timerWidget.addEventListener('lostpointercapture', e => clearDragState(e.pointerId));
+
+window.addEventListener('resize', () => {
+  if (!timerWidget.classList.contains('timer-draggable')) return;
+  const left = parseFloat(timerWidget.style.left) || DRAG_MARGIN;
+  const top  = parseFloat(timerWidget.style.top) || DRAG_MARGIN;
+  const clamped = clampTimerPosition(left, top);
+  setTimerPosition(clamped.left, clamped.top);
+  persistTimerPosition();
 });
 
 // ── Session counter ───────────────────────────────────────────────────────────
@@ -547,6 +660,8 @@ async function init() {
     durLong.value  = savedDurations.longBreak;
     applyDurations();
   }
+
+  restoreTimerPosition();
 
   sessionCountEl.textContent = getSessionCount();
 
