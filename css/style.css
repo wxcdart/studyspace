@@ -88,11 +88,53 @@ html, body {
 }
 
 /* Clock inside timer widget */
+.clock-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: -0.75rem;
+}
+
 .timer-clock {
   font-size: 1.2rem; font-weight: 300;
   letter-spacing: 0.12em;
   color: var(--text-muted);
-  margin-bottom: -0.75rem;
+}
+
+.timezone-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M1 1l5 6 5-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.4rem center;
+  background-size: 10px;
+}
+
+.timezone-select:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text);
+}
+
+.timezone-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(240, 160, 75, 0.1);
+}
+
+.timezone-select option {
+  background: #1a1a2e;
+  color: var(--text);
 }
 
 #timer-widget.timer-draggable {

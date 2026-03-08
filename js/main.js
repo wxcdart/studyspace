@@ -354,11 +354,30 @@ function incrementSessionCount() {
 // ── Clock ─────────────────────────────────────────────────────────────────────
 
 const clockEl = document.getElementById('clock');
+const timezoneSelect = document.getElementById('timezone-select');
+let currentTimezone = get(KEYS.timezone) || 'local';
+
+// Restore saved timezone
+if (currentTimezone) {
+  timezoneSelect.value = currentTimezone;
+}
 
 function tickClock() {
-  clockEl.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const now = new Date();
+  const options = { hour: '2-digit', minute: '2-digit' };
+  
+  if (currentTimezone !== 'local') {
+    options.timeZone = currentTimezone;
+  }
+  
+  clockEl.textContent = now.toLocaleTimeString([], options);
   requestAnimationFrame(tickClock);
 }
+
+timezoneSelect.addEventListener('change', () => {
+  currentTimezone = timezoneSelect.value;
+  set(KEYS.timezone, currentTimezone);
+});
 
 // ── Panels ────────────────────────────────────────────────────────────────────
 

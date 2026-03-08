@@ -42,7 +42,29 @@
 
     <main id="main">
       <div id="timer-widget" class="glass-card">
-        <div id="clock" aria-live="off" class="timer-clock"></div>
+        <div class="clock-wrapper">
+          <div id="clock" aria-live="off" class="timer-clock"></div>
+          <select id="timezone-select" class="timezone-select" aria-label="Timezone">
+            <option value="local">Local Time</option>
+            <option value="America/New_York">New York (EST)</option>
+            <option value="America/Chicago">Chicago (CST)</option>
+            <option value="America/Denver">Denver (MST)</option>
+            <option value="America/Los_Angeles">Los Angeles (PST)</option>
+            <option value="Europe/London">London (GMT)</option>
+            <option value="Europe/Paris">Paris (CET)</option>
+            <option value="Europe/Berlin">Berlin (CET)</option>
+            <option value="Europe/Moscow">Moscow (MSK)</option>
+            <option value="Asia/Dubai">Dubai (GST)</option>
+            <option value="Asia/Kolkata">India (IST)</option>
+            <option value="Asia/Singapore">Singapore (SGT)</option>
+            <option value="Asia/Tokyo">Tokyo (JST)</option>
+            <option value="Asia/Shanghai">Shanghai (CST)</option>
+            <option value="Asia/Taipei">Taipei (CST)</option>
+            <option value="Asia/Hong_Kong">Hong Kong (HKT)</option>
+            <option value="Australia/Sydney">Sydney (AEDT)</option>
+            <option value="Pacific/Auckland">Auckland (NZDT)</option>
+          </select>
+        </div>
 
         <div id="timer-modes" role="group" aria-label="Timer mode">
           <button class="mode-btn active" data-mode="focus">Focus</button>

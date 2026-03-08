@@ -11,6 +11,7 @@ export const KEYS = {
   alarmVolume:      'alarmVolume',
   playlists:        'playlists',
   activePlaylistId: 'activePlaylistId',
+  timezone:         'timezone',
 };
 
 export function get(key, defaultValue = null) {
