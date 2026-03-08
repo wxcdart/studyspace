@@ -78,13 +78,6 @@ html, body {
   gap: 1.25rem;
 }
 
-/* ── Clock ──────────────────────────────────────────────────────────────────── */
-#clock {
-  font-size: 1.2rem; font-weight: 300;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
-}
-
 /* ── Timer widget ───────────────────────────────────────────────────────────── */
 #timer-widget {
   display: flex; flex-direction: column;
@@ -92,6 +85,14 @@ html, body {
   gap: 1.5rem;
   padding: 2.25rem 3rem;
   min-width: 300px;
+}
+
+/* Clock inside timer widget */
+.timer-clock {
+  font-size: 1.2rem; font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: -0.75rem;
 }
 
 #timer-widget.timer-draggable {
