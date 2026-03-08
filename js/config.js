@@ -17,4 +17,11 @@ export const FALLBACK_SPACES = [
     category: "Lofi",
     ambientSounds: [],
   },
+  {
+    id: "cafe-study",
+    name: "Café Study",
+    youtubeId: "ctcDHK4kgSs",
+    category: "Café",
+    ambientSounds: [],
+  },
 ];
