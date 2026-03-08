@@ -11,13 +11,6 @@ export const TIMER_DURATIONS = {
 // Used when the Worker / network is unavailable
 export const FALLBACK_SPACES = [
   {
-    id: "lofi-chill",
-    name: "Lofi Chill",
-    youtubeId: "jfKfPfyJRdk",
-    category: "Lofi",
-    ambientSounds: [],
-  },
-  {
     id: "cafe-study",
     name: "Café Study",
     youtubeId: "ctcDHK4kgSs",
